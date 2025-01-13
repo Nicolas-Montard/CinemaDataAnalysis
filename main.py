@@ -42,9 +42,9 @@ print(cleaned_cinemas_data[["fauteuils", "écrans", "entrées annuelles"]].descr
 # puisque tout les champs contiennes la même région, je vais utiliser les unité urbaine à la place
 cleaned_cinemas_data["chair_per_entrance"] = cleaned_cinemas_data["entrées 2022"] / cleaned_cinemas_data["fauteuils"]
 average_chair_by_urban_unit = cleaned_cinemas_data.groupby("unité urbaine")["chair_per_entrance"].mean()
-print("les 3 unité urbaine ayant eu le moins de personnes par siège au cours de l'années 2022 sont :")
+print("\nles 3 unité urbaine ayant eu le moins de personnes par siège au cours de l'années 2022 sont :")
 print(average_chair_by_urban_unit.sort_values().head(3))
-print("les 3 unité urbaine ayant eu le plus de personnes par siège au cours de l'années 2022 sont :")
+print("\nles 3 unité urbaine ayant eu le plus de personnes par siège au cours de l'années 2022 sont :")
 print(average_chair_by_urban_unit.sort_values().tail(3))
 
 def get_average_chair_by_urban_unit_digram(df):
@@ -64,7 +64,7 @@ get_average_chair_by_urban_unit_digram(average_chair_by_urban_unit)
 data_filtered_2022 = cleaned_cinemas_data[["écrans", "fauteuils", "entrées 2022"]].dropna()
 correlation_chair_entrees = data_filtered_2022["fauteuils"].corr(data_filtered_2022["entrées 2022"])
 correlation_screen_entrees = data_filtered_2022["écrans"].corr(data_filtered_2022["entrées 2022"])
-print(f"La correlation entre les fauteils et les entrées annuelles sont de : {correlation_chair_entrees:.2f}")
+print(f"\nLa correlation entre les fauteils et les entrées annuelles sont de : {correlation_chair_entrees:.2f}")
 print(f"La correlation entre les écrans et les entrées annuelles sont de : {correlation_screen_entrees:.2f}")
 
 def scatter_diagram(data, col1, col2, title, x_label, y_label, data2 = None):
