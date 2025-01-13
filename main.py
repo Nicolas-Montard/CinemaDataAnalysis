@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 cinemas_data =  pd.read_csv("./csv/cinemas.csv", sep=";")
 
@@ -55,3 +56,37 @@ def get_average_chair_by_urban_unit_digram(df):
     plt.show()
 
 get_average_chair_by_urban_unit_digram(average_chair_by_urban_unit)
+
+# ********************************************************************
+
+data_filtered_2022 = cleaned_cinemas_data[["écrans", "fauteuils", "entrées 2022"]].dropna()
+correlation_chair_entrees = data_filtered_2022["fauteuils"].corr(data_filtered_2022["entrées 2022"])
+correlation_screen_entrees = data_filtered_2022["écrans"].corr(data_filtered_2022["entrées 2022"])
+print(f"La correlation entre les fauteils et les entrées annuelles sont de : {correlation_chair_entrees:.2f}")
+print(f"La correlation entre les écrans et les entrées annuelles sont de : {correlation_screen_entrees:.2f}")
+
+def scatter_diagram(data, col1, col2, title, x_label, y_label):
+    sns.regplot(x=col1, y=col2, data=data, line_kws={'color':'red'})
+    plt.title(title)
+    plt.xlabel(x_label)
+    plt.ylabel(y_label)
+    plt.grid(axis='y', linestyle='--')
+    plt.tight_layout()
+    plt.show()
+
+scatter_diagram(
+    data=data_filtered_2022,
+    col1="fauteuils",
+    col2="entrées 2022",
+    title="Corrélation entre le nombre de fauteuils et les entrées annuelles",
+    x_label="Nombre de fauteuils",
+    y_label="Entrées annuelles"
+)
+scatter_diagram(
+    data=data_filtered_2022,
+    col1="écrans",
+    col2="entrées 2022",
+    title="Corrélation entre le nombre d'écrans et les entrées annuelles",
+    x_label="Nombre de fauteuils",
+    y_label="Entrées annuelles"
+)
