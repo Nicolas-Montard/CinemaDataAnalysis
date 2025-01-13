@@ -33,7 +33,7 @@ Les performances du modèle sont ensuite évaluées et le coefficient de déterm
 
 Le modèle est ensuite utilisé pour prédire les entrées en 2022 et le résultat est comparé à l'aide d'un graphique superposant les résultats réels de 2022 et ceux prédits par le modèle.
 
-## installation
+## Installation
 
 ### Étape 1 : Cloner le dépôt
 
