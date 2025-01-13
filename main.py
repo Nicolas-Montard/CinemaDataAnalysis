@@ -1,6 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error, r2_score
 
 cinemas_data =  pd.read_csv("./csv/cinemas.csv", sep=";")
 
@@ -43,7 +46,6 @@ print("les 3 unité urbaine ayant eu le moins de personnes par siège au cours d
 print(average_chair_by_urban_unit.sort_values().head(3))
 print("les 3 unité urbaine ayant eu le plus de personnes par siège au cours de l'années 2022 sont :")
 print(average_chair_by_urban_unit.sort_values().tail(3))
-# ********************************************************************
 
 def get_average_chair_by_urban_unit_digram(df):
     plt.bar(df.index, df)
@@ -65,8 +67,11 @@ correlation_screen_entrees = data_filtered_2022["écrans"].corr(data_filtered_20
 print(f"La correlation entre les fauteils et les entrées annuelles sont de : {correlation_chair_entrees:.2f}")
 print(f"La correlation entre les écrans et les entrées annuelles sont de : {correlation_screen_entrees:.2f}")
 
-def scatter_diagram(data, col1, col2, title, x_label, y_label):
-    sns.regplot(x=col1, y=col2, data=data, line_kws={'color':'red'})
+def scatter_diagram(data, col1, col2, title, x_label, y_label, data2 = None):
+    sns.regplot(x=col1, y=col2, data=data, line_kws={'color':'blue'})
+    if(data2 is not None and len(data2) > 0):
+        data2_df = pd.DataFrame({col1: data[col1], col2: data2})
+        sns.regplot(x=col1, y=col2, data=data2_df, color='green', line_kws={'color':'green'}, marker="x")
     plt.title(title)
     plt.xlabel(x_label)
     plt.ylabel(y_label)
@@ -89,4 +94,37 @@ scatter_diagram(
     title="Corrélation entre le nombre d'écrans et les entrées annuelles",
     x_label="Nombre de fauteuils",
     y_label="Entrées annuelles"
+)
+
+# ********************************************************************
+
+explanatory_variable = cleaned_cinemas_data[["écrans", "fauteuils", "population de la commune"]]
+target_variable = cleaned_cinemas_data["entrées 2021"]
+
+X_train, X_test, y_train, y_test = train_test_split(explanatory_variable, target_variable, test_size=0.2)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+r2 = r2_score(y_test, y_pred)
+mae = mean_absolute_error(y_test, y_pred)
+
+print(f"Performance du modèle")
+print(f"R² : {r2:.2f}")
+print(f"MAE : {mae:.2f}")
+
+explanatory_variable = cleaned_cinemas_data[["écrans", "fauteuils", "population de la commune"]]
+target_variable = cleaned_cinemas_data["entrées 2022"]
+
+y_2022_prediction = model.predict(explanatory_variable)
+
+scatter_diagram(
+    data=data_filtered_2022,
+    col1="écrans",
+    col2="entrées 2022",
+    title="Corrélation entre le nombre d'écrans et les entrées annuelles",
+    x_label="Nombre de fauteuils",
+    y_label="Entrées annuelles",
+    data2=y_2022_prediction
 )
